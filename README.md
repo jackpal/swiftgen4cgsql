@@ -1,18 +1,16 @@
 # SwiftGen: A Swift code generator for CG-SQL
 
-SwiftGen generate Swift wrappers for [CG-SQL](https://cgsql.dev/) code.
-
 ## Introduction
 
-This tool generates Swift wrappers for the CG-SQL language.
+SwiftGen is a command-line tool that generates Swift wrappers for the [CG-SQL](https://cgsql.dev/) language.
 
++ Allows Swift code to call CG-SQL procedures and result sets in an idiomatic way.
 + Supports the full CG-SQL language.
-+ Generates idiomatic Swift.
 + Generates Swift Package Manager packages.
 
 ## Example
 
-This is a CG-SQL file for a toy Todo List app.
+This is a CG-SQL file for a toy Todo List app:
 
 ```sql
 create proc tasks_create_tables()
@@ -35,24 +33,24 @@ begin
   select rowid, description, done from tasks order by rowid;
 end;
 
-create proc tasks_set_done(rowid_ integer not null, done_ bool not null)
+create proc tasks_set_done(rowid_ long not null, done_ bool not null)
 begin
   update tasks set done = done_ where rowid == rowid_;
 end;
 
-create proc tasks_delete(rowid_ integer not null)
+create proc tasks_delete(rowid_ long not null)
 begin
   delete from tasks where rowid == rowid_;
 end;
 ```
 
-This is the generated Swift API:
+This is the generated Swift API for that cg-sql:
 
 ```swift
 public func tasksCreateTables(db: OpaquePointer) throws
 public func tasksAdd(db: OpaquePointer, description: String, done: Bool) throws 
-public func tasksSetDone(db: OpaquePointer, rowid: Int32, done: Bool) throws 
-public func tasksDelete(db: OpaquePointer, rowid: Int32) throws
+public func tasksSetDone(db: OpaquePointer, rowid: Int64, done: Bool) throws 
+public func tasksDelete(db: OpaquePointer, rowid: Int64) throws
 
 public struct TasksAll : RandomAccessCollection {
     public struct Element : Hashable {

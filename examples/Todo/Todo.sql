@@ -18,12 +18,12 @@ begin
   select rowid, description, done from tasks order by rowid;
 end;
 
-create proc tasks_set_done(rowid_ integer not null, done_ bool not null)
+create proc tasks_set_done(rowid_ long not null, done_ bool not null)
 begin
   update tasks set done = done_ where rowid == rowid_;
 end;
 
-create proc tasks_delete(rowid_ integer not null)
+create proc tasks_delete(rowid_ long not null)
 begin
   delete from tasks where rowid == rowid_;
 end;
