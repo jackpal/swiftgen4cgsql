@@ -139,6 +139,6 @@ libraries expose in one form or another.
 
 - SwiftGen.py has not been tested extensively.
 - Some more obscure features of CG-SQL may not work.
-- Swift Package Manager is not well supported by Xcode, yet. You may encounter
-  bugs and/or crashes when trying to use the generated Swift package with Xcode
-  projects, and/or with Swift Playgrounds.
+- Swift Package Manager packages are not well supported by Xcode, yet. You may
+  encounter bugs and / or crashes when trying to use the generated Swift package
+  with Xcode projects, and / or with Swift Playgrounds.
