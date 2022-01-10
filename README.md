@@ -1,6 +1,6 @@
-# swiftgen4cgsql: A Swift code generator for CG-SQL
+# SwiftGen: A Swift code generator for CG-SQL
 
-Generates Swift wrappers for [CG-SQL](https://cgsql.dev/) code.
+SwiftGen generate Swift wrappers for [CG-SQL](https://cgsql.dev/) code.
 
 ## Introduction
 
@@ -60,22 +60,19 @@ public struct TasksAll : RandomAccessCollection {
         public var description: String { get }
         public var done: Bool { get }
     }
-
     public init(db: OpaquePointer) throws
 }
-
-
 ```
 
 ## Installation
 
 SwiftGen depends upon
 
-+ Python3
++ Python 3
 + Swift
 + The CG-SQL compiler and runtime source files.
 
-Typically Python3 will be already installed in your computer environment.
+Typically Python 3 will be already installed in your computer environment.
 
 Swift can be installed from [Swift.org](https://www.swift.org/) or as part of
 [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12).
