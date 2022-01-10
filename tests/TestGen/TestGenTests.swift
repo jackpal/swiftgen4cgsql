@@ -21,13 +21,13 @@ final class TestGenTests: XCTestCase {
         try aSetB(db:db, rowid:2, b:true)
         try aDelete(db:db, rowid:1)
 
-        for task in try AllA(db:db) {
+        for (i,task) in try AllA(db:db).enumerated() {
             XCTAssertEqual(task, task)
-            print("\(task.row): rowid: \(task.rowid) t: \(task.t) b: \(task.b) i: \(task.i) l: \(task.l) r: \(task.r) bl:\(task.bl)")
+            print("\(i): rowid: \(task.rowid) t: \(task.t) b: \(task.b) i: \(task.i) l: \(task.l) r: \(task.r) bl:\(task.bl)")
         }
 
-        for task in try AllB(db:db) {
-            print("\(task.row): rowid: \(task.rowid) t: \(task.t ?? "nil") b: \(task.b ?? false) i: \(task.i ?? -1) l: \(task.l ?? -1) r: \(task.r ?? -1) bl:\(task.bl ?? "null".data(using: .utf8)!)")
+        for (i,task) in try AllB(db:db).enumerated() {
+            print("\(i): rowid: \(task.rowid) t: \(task.t ?? "nil") b: \(task.b ?? false) i: \(task.i ?? -1) l: \(task.l ?? -1) r: \(task.r ?? -1) bl:\(task.bl ?? "null".data(using: .utf8)!)")
         }
     }
 
