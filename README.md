@@ -4,13 +4,15 @@ Generates Swift wrappers for [CG-SQL](https://cgsql.dev/) code.
 
 ## Introduction
 
-This tool generates Swift wrappers for cg-sql.
+This tool generates Swift wrappers for the CG-SQL language.
 
-+ Supports full CG-SQL language.
-+ Idiomatic Swift.
++ Supports the full CG-SQL language.
++ Generates idiomatic Swift.
 + Generates Swift Package Manager packages.
 
 ## Example
+
+This is a CG-SQL file for a toy Todo List app.
 
 ```sql
 create proc tasks_create_tables()
@@ -30,7 +32,7 @@ end;
 
 create proc tasks_all()
 begin
-  select * from tasks order by rowid;
+  select rowid, description, done from tasks order by rowid;
 end;
 
 create proc tasks_set_done(rowid_ integer not null, done_ bool not null)
@@ -44,24 +46,25 @@ begin
 end;
 ```
 
-Generated Swift API:
+This is the generated Swift API:
 
 ```swift
 public func tasksCreateTables(db: OpaquePointer) throws
-public func tasksAdd(db: OpaquePointer, description: String, done: Bool) throws
-public func tasksSetDone(db: OpaquePointer, rowid: Int32, done: Bool) throws
+public func tasksAdd(db: OpaquePointer, description: String, done: Bool) throws 
+public func tasksSetDone(db: OpaquePointer, rowid: Int32, done: Bool) throws 
 public func tasksDelete(db: OpaquePointer, rowid: Int32) throws
 
 public struct TasksAll : RandomAccessCollection {
     public struct Element : Hashable {
-        let resultSet: TasksAll
-        public let row: Int32
+        public var rowid: Int64 { get }
         public var description: String { get }
         public var done: Bool { get }
     }
 
-    public init(db: OpaquePointer) throws 
+    public init(db: OpaquePointer) throws
 }
+
+
 ```
 
 ## Installation

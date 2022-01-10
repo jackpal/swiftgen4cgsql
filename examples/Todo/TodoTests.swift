@@ -16,10 +16,10 @@ final class TodoTests: XCTestCase {
         try tasksSetDone(db:db, rowid:2, done:true)
         try tasksDelete(db:db, rowid:1)
 
-        for task in try TasksAll(db:db) {
+        for (i, task) in try TasksAll(db:db).enumerated() {
             XCTAssertTrue(task == task)
             XCTAssertEqual(task.hashValue, task.hashValue)
-            print("\(task.row): \(task.description) done: \(task.done)")
+            print("\(i): rowid: \(task.rowid) description: \(task.description) done: \(task.done)")
         }
     }
 }

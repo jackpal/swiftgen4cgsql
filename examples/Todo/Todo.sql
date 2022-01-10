@@ -15,7 +15,7 @@ end;
 
 create proc tasks_all()
 begin
-  select * from tasks order by rowid;
+  select rowid, description, done from tasks order by rowid;
 end;
 
 create proc tasks_set_done(rowid_ integer not null, done_ bool not null)

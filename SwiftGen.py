@@ -540,7 +540,7 @@ def gen_swift_multi_result_query(out, query):
         f'public struct {swift_query_name} : RandomAccessCollection {{\n')
     out.write('    public struct Element : Hashable {\n')
     out.write(f'        let resultSet: {swift_query_name}\n')
-    out.write('        public let row: Int32\n')
+    out.write('        let row: Int32\n')
 
     gen_projection_getters(out, query, True)
 

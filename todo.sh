@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "Testing...."
+echo "Building Todo example...."
 
 CGSQL_SOURCES=../CG-SQL/sources
 CQL="$CGSQL_SOURCES/out/cql"
@@ -20,13 +20,6 @@ fi
 OUT_DIR=out
 
 rm -rf "$OUT_DIR"
-
-"$SWIFTGEN" -c "$CQL" -d "$CGSQL_SOURCES" --in tests/TestGen/TestGen.sql -o "$OUT_DIR" -p TestGen -t tests/TestGen/TestGenTests.swift
-pushd "$OUT_DIR"/TestGen
-swift test
-popd
-
-# Also build examples
 
 "$SWIFTGEN" -c "$CQL" -d "$CGSQL_SOURCES" --in examples/Todo/Todo.sql -o "$OUT_DIR" -p Todo -t examples/Todo/TodoTests.swift
 pushd "$OUT_DIR"/Todo
