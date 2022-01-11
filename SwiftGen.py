@@ -39,7 +39,7 @@ def parse_args():
 ARGS = parse_args()
 
 
-def cql_gen_c(file_sql, out_dir):
+def cql_gen_c(cql_compiler_path, file_sql, out_dir):
     if ARGS.verbose:
         print(f'Generating C')
 
@@ -50,8 +50,6 @@ def cql_gen_c(file_sql, out_dir):
 
     file_h = out_dir / file_h_name
     file_c = out_dir / file_c_name
-
-    global cql_compiler_path
 
     absolute_file_sql = file_sql.resolve(True)
 
@@ -70,7 +68,7 @@ def cql_gen_c(file_sql, out_dir):
     return (file_h, file_c)
 
 
-def cql_gen_objc(file_sql, out_dir):
+def cql_gen_objc(cql_compiler_path, file_sql, out_dir):
     if ARGS.verbose:
         print(f'Generating Obj-C')
 
@@ -82,8 +80,6 @@ def cql_gen_objc(file_sql, out_dir):
     file_h = out_dir / file_h_name
     file_objc_h = out_dir / file_objc_h_name
 
-    global cql_compiler_path
-
     result = subprocess.run([cql_compiler_path, "--in", file_sql,
                                 "--cg", file_objc_h, '--rt', 'objc_mit', '--objc_c_include_path',  file_h_name, '--cqlrt', 'cqlrt_cf.h'])
     if result.returncode != 0:
@@ -93,15 +89,13 @@ def cql_gen_objc(file_sql, out_dir):
     return (file_objc_h)
 
 
-def cql_gen_json_schema(file_sql, out_dir):
+def cql_gen_json_schema(cql_compiler_path, file_sql, out_dir):
     if ARGS.verbose:
         print(f'Generating json')
 
     file_stem = file_sql.stem
     file_json = out_dir / (file_stem + ".json")
     
-    global cql_compiler_path
-
     result = subprocess.run([cql_compiler_path, "--in", file_sql, "--rt",
                              "json_schema", "--cg", file_json])
     if result.returncode != 0:
@@ -688,20 +682,19 @@ def gen_read_me(package_name, package_dir):
     read_me_file.write_text(out.getvalue())
 
 
-def gen_project(file_sql, package_name, out_dir, test_files):
+def gen_project(cql_compiler_path, cgsql_sources_dir, file_sql, package_name, out_dir, test_files):
     if ARGS.verbose:
         print(f'Generating project {out_dir}')
     # Generate the schema first because it can use relative paths,
     # so the cql error messages are nice and short.
-    file_json_schema = cql_gen_json_schema(file_sql, out_dir)
-    file_h, file_c = cql_gen_c(file_sql, out_dir)
-    file_objc_h = cql_gen_objc(file_sql, out_dir)
+    file_json_schema = cql_gen_json_schema(cql_compiler_path, file_sql, out_dir)
+    file_h, file_c = cql_gen_c(cql_compiler_path, file_sql, out_dir)
+    file_objc_h = cql_gen_objc(cql_compiler_path, file_sql, out_dir)
     json_schema = parse_json_schema(file_json_schema)
     if ARGS.verbose:
         print(json.dumps(json_schema, indent=4, sort_keys=True))
     package_dir = gen_swift_package(package_name, out_dir)
     generate_test_target = len(test_files) > 0
-    global cgsql_sources_dir
     c_lib_name = make_c_lib(package_name, package_dir,
                             cgsql_sources_dir, file_h, file_c, file_objc_h, generate_test_target)
     gen_swift_target(package_name, package_dir, c_lib_name, json_schema)
@@ -724,9 +717,7 @@ def main():
     if ARGS.verbose:
         print(ARGS)
     
-    global cql_compiler_path
     cql_compiler_path = Path(ARGS.cql_compiler_path).resolve(True)
-    global cgsql_sources_dir
     cgsql_sources_dir = Path(ARGS.cgsql_sources_dir).resolve(True)
     if not cgsql_sources_dir.is_dir():
         usage(f'CG-SQL sources directory does not exist: {ARGS.cgsql_sources_dir}')
@@ -738,7 +729,7 @@ def main():
     test_files = [] if ARGS.test_files is None else ARGS.test_files
 
     initialize_output_dir(out_dir)
-    gen_project(file_sql, package_name, out_dir, test_files)
+    gen_project(cql_compiler_path, cgsql_sources_dir, file_sql, package_name, out_dir, test_files)
 
 
 if __name__ == "__main__":
