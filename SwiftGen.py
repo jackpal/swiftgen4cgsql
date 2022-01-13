@@ -126,14 +126,6 @@ def gen_swift_package(package_name, out_dir):
         os.chdir(old_cwd)
 
 
-def get_fetcher_decls(file_c, json_schema):
-    lines = Path(file_c).read_text().split('\n')
-
-    def is_fetcher_decl(line):
-        return line.startswith("extern CQL_WARN_UNUSED cql_code ") and "_result_stmt" in line
-    return [line for line in lines if is_fetcher_decl(line)]
-
-
 def update_package_swift_file(package_name, package_dir, c_lib_name, generate_test_target):
     if ARGS.verbose:
         print(f'update_package_swift_file {package_name} {c_lib_name}')
