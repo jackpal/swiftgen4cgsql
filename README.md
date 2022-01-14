@@ -81,10 +81,22 @@ packaged for distribution. You will have to build it from source. See the
 
 ## Usage
 
-The SwiftGen.py file can be placed anywhere you like. You use it like this:
+The SwiftGen.py script generates Swift code from the CG-SQL compiler's JSON
+metadata description.
+
+The PackageGen.py script creates a Swift Package Manager package that contains
+the generated Swift code, along with the generated Objective-C code, the
+generated C code, and the cg-sql runtime.
+
+The PackageGen.py script will invoke the SwiftGen.py script to generate the
+Swift code as needed.
+
+The SwiftGen.py and PackageGen.py files can be placed anywhere you like.
+
+You call PackageGen.py like this:
 
 ```
-usage: SwiftGen.py [-h] -c PATH -d DIR -i FILE [-o DIR] -p NAME [-t FILE] [-v]
+usage: PackageGen.py [-h] -c PATH -d DIR -i FILE [-o DIR] -p NAME -s PATH [-t FILE] [-v]
 
 required arguments:
   -c PATH, --cql_compiler PATH
@@ -95,7 +107,8 @@ required arguments:
   -o DIR, --out DIR     Directory to generate code to
   -p NAME, --package_name NAME
                         Swift Package Name
-
+  -s PATH, --swift-generator PATH
+                        Path to the Swift code generator.
 optional arguments:
   -h, --help            show this help message and exit
   -t FILE, --test FILE  Swift Package unit test file. Can be supplied multiple times.
@@ -122,7 +135,7 @@ match your configuration.
 
 ## Using the generated package
 
-SwiftGen.py generates a Swift Package Manager package from the CG-SQL input file. You
+PackageGen.py generates a Swift Package Manager package from the CG-SQL input file. You
 can use the output in several ways:
 
 + As a dependency for other Swift Package Manager packages.
@@ -139,6 +152,6 @@ libraries expose in one form or another.
 
 - SwiftGen.py has not been tested extensively.
 - Some more obscure features of CG-SQL may not work.
-- Swift Package Manager packages are not well supported by Xcode, yet. You may
+- Swift Package Manager packages are not well supported by Xcode. You may
   encounter bugs and / or crashes when trying to use the generated Swift package
   with Xcode projects, and / or with Swift Playgrounds.
