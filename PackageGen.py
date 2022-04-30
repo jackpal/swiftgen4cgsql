@@ -58,17 +58,15 @@ def cql_gen_c(cql_compiler_path, file_sql, out_dir):
 
     absolute_file_sql = file_sql.resolve(True)
 
-    old_cwd = os.getcwd()
-
-    try:
-        os.chdir(out_dir)
-        result = subprocess.run([cql_compiler_path, "--in", absolute_file_sql,
-                                 "--cg", file_h_name, file_c_name, '--cqlrt', 'cqlrt_cf.h'])
-        if result.returncode != 0:
-            raise ValueError(
-                f'Could not generate c code from {file_sql}. Return code {result.returncode}')
-    finally:
-        os.chdir(old_cwd)
+    result = subprocess.run([cql_compiler_path,
+                                '--in', absolute_file_sql,
+                                '--cg', file_h, file_c,
+                                '--cqlrt', 'cqlrt_cf.h',
+                                '--c_include_path', file_h_name
+                                ])
+    if result.returncode != 0:
+        raise ValueError(
+            f'Could not generate c code from {file_sql}. Return code {result.returncode}')
 
     return (file_h, file_c)
 
